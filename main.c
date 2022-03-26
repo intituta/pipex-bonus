@@ -6,7 +6,7 @@
 /*   By: kferterb <kferterb@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 21:30:55 by kferterb          #+#    #+#             */
-/*   Updated: 2022/03/26 13:46:58 by kferterb         ###   ########.fr       */
+/*   Updated: 2022/03/26 14:13:46 by kferterb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,9 +74,7 @@ void	ft_first_proc(t_struct *s)
 	{
 		dup2(s->here_pipe[0], 0);
 		dup2(s->pipe[1], 1);
-		close(s->here_pipe[0]);
-		close(s->pipe[0]);
-		close(s->pipe[1]);
+		ft_close_pipes(s);
 		ft_do_cmd(s->av[3], s);
 	}
 	if (ft_strcmp(s->av[1], s->av[4]) == 0)
