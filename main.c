@@ -6,7 +6,7 @@
 /*   By: kferterb <kferterb@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 21:30:55 by kferterb          #+#    #+#             */
-/*   Updated: 2022/03/17 13:37:22 by kferterb         ###   ########.fr       */
+/*   Updated: 2022/03/26 13:46:58 by kferterb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,9 @@ void	ft_second_proc(t_struct *s)
 		fd = open(s->av[s->ac - 1], O_WRONLY | O_TRUNC | O_CREAT, 422);
 	if (fd == -1)
 		exit(write(1, "error: open file\n", 17));
+	dup2(s->pipe[0], 0);
 	if ((!s->flag && s->ac > 5) || (s->flag && s->ac > 6))
 		ft_multipipe(s);
-	else
-		dup2(s->pipe[0], 0);
 	dup2(fd, 1);
 	close(fd);
 	ft_close_pipes(s);
@@ -76,6 +75,8 @@ void	ft_first_proc(t_struct *s)
 		dup2(s->here_pipe[0], 0);
 		dup2(s->pipe[1], 1);
 		close(s->here_pipe[0]);
+		close(s->pipe[0]);
+		close(s->pipe[1]);
 		ft_do_cmd(s->av[3], s);
 	}
 	if (ft_strcmp(s->av[1], s->av[4]) == 0)
@@ -112,9 +113,5 @@ int	main(int ac, char **av, char **env)
 	pid = fork();
 	if (pid == 0)
 		ft_first_proc(&s);
-	pid = fork();
-	if (pid == 0)
-		ft_second_proc(&s);
-	wait(0);
-	return (0);
+	ft_second_proc(&s);
 }
